@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int SERVER_PORT = 5050;
 
-    public static final String SERVER_IP = "192.168.43.212";
+    public static final String SERVER_IP = "192.0.0.4";
     private ClientThread clientThread;
     private Thread thread;
     private LinearLayout msgList;
