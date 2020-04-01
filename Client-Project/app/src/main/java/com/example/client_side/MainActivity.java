@@ -2,13 +2,16 @@ package com.example.client_side;
 
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -39,28 +43,38 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private int clientTextColor;
     private EditText edMessage;
-
+    String mes;
+    BufferedReader br;
+    private Button clear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        clear = findViewById(R.id.clear);
         setTitle("Client");
         clientTextColor = ContextCompat.getColor(this, R.color.green);
         handler = new Handler();
         msgList = findViewById(R.id.msgList);
         edMessage = findViewById(R.id.edMessage);
     }
-
+    private final String htmlText = "<body><img src=\"likes.png\" width=\"20px\" height=\"20px\"></body>";
     public TextView textView(String message, int color, Boolean value) {
         if (null == message || message.trim().isEmpty()) {
             message = "<Empty Message>";
         }
-        TextView tv = new TextView(this);
+        TextView tv = new TextView(MainActivity.this);
         tv.setTextColor(color);
-        tv.setText(message + " [" + getTime() + "]");
         tv.setTextSize(20);
         tv.setPadding(0, 5, 0, 0);
+        if (message.contains("like"))
+        {
+            System.out.println("Should be like icon");
+            Log.e("like", "=like");
+            tv.setText(Html.fromHtml(htmlText, new ImageGetter(), null));
+        }
+        else {
+            tv.setText(message + " [" + getTime() + "]");
+        }
         tv.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 0));
         if (value) {
@@ -71,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showMessage(final String message, final int color, final Boolean value) {
         handler.post(new Runnable() {
+
             @Override
             public void run() {
                 msgList.addView(textView(message, color, value));
@@ -87,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
             thread.start();
             return;
         }
-
+        if (view.getId() == R.id.clear)
+        {
+            msgList.removeAllViews();
+        }
         if (view.getId() == R.id.send_data) {
             String clientMessage = edMessage.getText().toString().trim();
             showMessage(clientMessage, Color.BLUE, false);
@@ -127,14 +145,23 @@ public class MainActivity extends AppCompatActivity {
 
 
                     this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    br = this.input;
                     String message = input.readLine();
-                    if (null == message || "Disconnect".contentEquals(message)) {
-                        Thread.interrupted();
-                        message = "Server Disconnected...";
-                        showMessage(message, Color.RED, false);
-                        break;
+
+                    if (message.contains("like"))
+                    {
+                        showMessage("Server: " + htmlText, clientTextColor, true);
                     }
-                    showMessage("Server: " + message, clientTextColor, true);
+                    else {
+                        if (null == message || "Disconnect".contentEquals(message)) {
+                            Thread.interrupted();
+                            message = "Server Disconnected...";
+                            showMessage(message, Color.RED, false);
+                            break;
+                        }
+                        showMessage("Server: " + message, clientTextColor, true);
+                        mes = message;
+                    }
                 }
 
             } catch (UnknownHostException e1) {
@@ -182,4 +209,21 @@ public class MainActivity extends AppCompatActivity {
             clientThread = null;
         }
     }
+
+    private class ImageGetter implements Html.ImageGetter {
+
+        public Drawable getDrawable(String source) {
+            int id;
+            if (source.equals("likes.png")) {
+                id = R.drawable.likes;
+            }
+            else {
+                return null;
+            }
+
+            Drawable d = getResources().getDrawable(id);
+            d.setBounds(0,0,40,40);
+            return d;
+        }
+    };
 }

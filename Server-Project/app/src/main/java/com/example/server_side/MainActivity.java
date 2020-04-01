@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity  {
                     String read = input.readLine();
                     if (null == read || "Disconnect".contentEquals(read)) {
                         Thread.interrupted();
-                        read = "Offline....";
-                        showMessage("Client : " + read, greenColor, true);
+                        read = "has left the chat room.";
+                        showMessage("Client : " + read, Color.RED, true);
                         break;
                     }
                     showMessage("Client : " + read, greenColor, true);

@@ -25,8 +25,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:hint="Message from Server"
-        android:inputType="textCapSentences"
-        android:tooltipText="Type a message"/>
+        android:inputType="none"
+        android:tooltipText="Type a message" />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -9,11 +9,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
+
     <Button
         android:id="@+id/connect_server"
-        android:layout_width="match_parent"
+        android:layout_width="374dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:onClick="onClick"
         android:text="Connect to server" />
 
@@ -25,13 +26,14 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:hint="Message from Client"
-        android:inputType="textCapSentences"/>
+        android:inputType="text" />
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="381dp"
+        android:layout_height="469dp"
         android:layout_above="@+id/send_data"
-        android:layout_below="@+id/edMessage">
+        android:layout_below="@+id/edMessage"
+        android:layout_marginBottom="67dp">
 
         <LinearLayout
             android:id="@+id/msgList"
@@ -46,9 +48,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/button_pressed"
         android:onClick="onClick"
         android:text="Send Message to server"
         android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="384dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="69dp"
+        android:onClick="onClick"
+        android:text="Clear" />
 
 </RelativeLayout>
